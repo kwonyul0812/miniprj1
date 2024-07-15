@@ -6,19 +6,24 @@ import {
   FormLabel,
   Heading,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickName, setNickName] = useState("");
 
+  const toast = useToast();
+  const navigate = useNavigate();
+
   function createAccount() {
     axios
       .post(`/api/member/signup`, { email, password, nickName })
-      .then()
+      .then(() => navigate("/"))
       .catch()
       .finally();
   }
@@ -51,8 +56,11 @@ export function MemberSignup() {
           </FormControl>
         </Box>
         <Box>
+          <Button mr={2} onClick={() => navigate("/")}>
+            취소
+          </Button>
           <Button onClick={createAccount} colorScheme={"blue"}>
-            확인
+            가입
           </Button>
         </Box>
       </Box>

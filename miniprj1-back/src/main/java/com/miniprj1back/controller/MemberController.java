@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
@@ -19,4 +21,12 @@ public class MemberController {
     public void signup(@RequestBody Member member) {
         service.createAccount(member);
     }
+
+    @PostMapping("token")
+    public Map<String, Object> token(@RequestBody Member member) {
+        Map<String, Object> result = service.getToken(member);
+
+        return result;
+    }
+
 }
