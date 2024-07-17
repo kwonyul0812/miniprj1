@@ -10,7 +10,10 @@ export function NavBar() {
 
   return (
     <Flex gap={5}>
-      <Box>게시판</Box>
+      <Box onClick={() => navigate("/")}>게시판</Box>
+      {account.isLoggedIn() && (
+        <Box onClick={() => navigate("/board/write")}>글쓰기</Box>
+      )}
       {account.isLoggedIn() || (
         <Box onClick={() => navigate("/member/login")}>로그인</Box>
       )}

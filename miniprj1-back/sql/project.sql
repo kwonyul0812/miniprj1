@@ -16,3 +16,19 @@ CREATE TABLE authority
 );
 
 DESC authority;
+
+CREATE TABLE board
+(
+    id        INT PRIMARY KEY AUTO_INCREMENT,
+    title     VARCHAR(200) NOT NULL,
+    content   VARCHAR(800) NOT NULL,
+    member_id INT          NOT NULL REFERENCES member (id)
+);
+ALTER TABLE board
+    ADD COLUMN inserted DATETIME DEFAULT NOW();
+ALTER TABLE board
+    MODIFY COLUMN inserted DATETIME NOT NULL DEFAULT NOW();
+
+DESC board;
+SELECT *
+FROM board;
