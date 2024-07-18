@@ -61,7 +61,7 @@ export function MemberLogin() {
             <Input onChange={(e) => setPassword(e.target.value)} />
           </FormControl>
         </Box>
-        <Box>
+        <Box ml={"320px"}>
           <Button colorScheme={"blue"} onClick={LoginClick}>
             로그인
           </Button>

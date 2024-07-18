@@ -4,8 +4,6 @@ import com.miniprj1back.domain.Board;
 import com.miniprj1back.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,5 +29,15 @@ public class BoardService {
 
     public Board get(Integer id) {
         return mapper.selectBoard(id);
+    }
+
+    public void delete(Integer id, Authentication authentication) {
+        mapper.deleteByBoardId(id);
+    }
+
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        Board board = mapper.selectBoard(id);
+
+        return board.getMemberId().equals(Integer.valueOf(authentication.getName()));
     }
 }

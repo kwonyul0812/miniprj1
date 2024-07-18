@@ -55,8 +55,8 @@ export function MemberSignup() {
             <Input onChange={(e) => setNickName(e.target.value)} />
           </FormControl>
         </Box>
-        <Box>
-          <Button mr={2} onClick={() => navigate("/")}>
+        <Box ml={"260px"}>
+          <Button mr={1} onClick={() => navigate("/")}>
             취소
           </Button>
           <Button onClick={createAccount} colorScheme={"blue"}>

@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
+  Button,
   Center,
-  chakra,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
   Spacer,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -18,11 +19,34 @@ export function BoardView() {
   const { id } = useParams();
   const [board, setBoard] = useState({});
 
-  const ChakraTextareaAutosize = chakra(TextareaAutosize);
+  const toast = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
   }, []);
+
+  function removeClick() {
+    axios
+      .delete(`/api/board/${id}`)
+      .then((res) => {
+        toast({
+          position: "bottom-right",
+          status: "success",
+          description: "게시글 삭제 성공",
+        });
+        navigate("/");
+      })
+      .catch((err) => {
+        if (err.response.status === 403) {
+          toast({
+            position: "bottom-right",
+            status: "warning",
+            description: "접근 권한 없음",
+          });
+        }
+      });
+  }
 
   return (
     <Center>
@@ -57,6 +81,14 @@ export function BoardView() {
             value={board.content}
             readOnly
           />
+        </Box>
+        <Box mb={7} ml={"465px"}>
+          <Button mr={1} colorScheme={"blue"}>
+            수정
+          </Button>
+          <Button colorScheme={"red"} onClick={removeClick}>
+            삭제
+          </Button>
         </Box>
       </Box>
     </Center>

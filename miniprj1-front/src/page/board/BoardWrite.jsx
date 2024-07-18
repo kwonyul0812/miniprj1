@@ -61,12 +61,8 @@ export function BoardWrite() {
             <Input readOnly value={account.nickName} />
           </FormControl>
         </Box>
-        <Box>
-          <Button
-            onClick={handleWriteClick}
-            left={"530px"}
-            colorScheme={"blue"}
-          >
+        <Box mb={7} ml={"530px"}>
+          <Button onClick={handleWriteClick} colorScheme={"blue"}>
             작성
           </Button>
         </Box>
