@@ -1,10 +1,7 @@
 package com.miniprj1back.mapper;
 
 import com.miniprj1back.domain.Board;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -46,4 +43,13 @@ public interface BoardMapper {
             WHERE id = #{boardId}
             """)
     int deleteByBoardId(Integer boardId);
+
+
+    @Update("""
+            UPDATE board
+            SET title = #{title},
+                content = #{content}
+            WHERE id = #{id}
+            """)
+    int updateBoard(Board board);
 }

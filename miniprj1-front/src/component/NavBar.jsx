@@ -10,32 +10,59 @@ export function NavBar() {
   const account = useContext(LoginContext);
 
   return (
-    <Flex gap={5}>
-      <Box onClick={() => navigate("/")}>게시판</Box>
-      {account.isLoggedIn() && (
-        <Box onClick={() => navigate("/board/write")}>글쓰기</Box>
-      )}
-      {account.isLoggedIn() || (
-        <Box onClick={() => navigate("/member/login")}>로그인</Box>
-      )}
-      {account.isLoggedIn() && (
-        <Box
-          onClick={() => {
-            account.logout();
-            toast({
-              position: "bottom-right",
-              status: "success",
-              description: "로그아웃 되었습니다.",
-            });
-            navigate("/");
-          }}
-        >
-          로그아웃
+    <Flex
+      w={"100%"}
+      h={"50px"}
+      bgColor={"lightgray"}
+      alignItems={"center"}
+      justifyContent={"space-between"}
+      fontSize={20}
+      fontWeight={600}
+      mb={10}
+    >
+      <Flex p={20} gap={5}>
+        <Box cursor={"pointer"} onClick={() => navigate("/")}>
+          게시판
         </Box>
-      )}
-      {account.isLoggedIn() || (
-        <Box onClick={() => navigate("/member/signup")}>회원가입</Box>
-      )}
+        {account.isLoggedIn() && (
+          <Box cursor={"pointer"} onClick={() => navigate("/board/write")}>
+            글쓰기
+          </Box>
+        )}
+      </Flex>
+      <Flex p={20} gap={5}>
+        {account.isLoggedIn() && (
+          <Box cursor={"pointer"} onClick={() => navigate("/member/view")}>
+            {account.nickName} 님
+          </Box>
+        )}
+        {account.isLoggedIn() || (
+          <Box cursor={"pointer"} onClick={() => navigate("/member/login")}>
+            로그인
+          </Box>
+        )}
+        {account.isLoggedIn() && (
+          <Box
+            cursor={"pointer"}
+            onClick={() => {
+              account.logout();
+              toast({
+                position: "bottom-right",
+                status: "success",
+                description: "로그아웃 되었습니다.",
+              });
+              navigate("/");
+            }}
+          >
+            로그아웃
+          </Box>
+        )}
+        {account.isLoggedIn() || (
+          <Box cursor={"pointer"} onClick={() => navigate("/member/signup")}>
+            회원가입
+          </Box>
+        )}
+      </Flex>
     </Flex>
   );
 }

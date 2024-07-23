@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -55,14 +56,14 @@ export function MemberSignup() {
             <Input onChange={(e) => setNickName(e.target.value)} />
           </FormControl>
         </Box>
-        <Box ml={"260px"}>
+        <Flex ml={"270px"}>
           <Button mr={1} onClick={() => navigate("/")}>
             취소
           </Button>
           <Button onClick={createAccount} colorScheme={"blue"}>
             가입
           </Button>
-        </Box>
+        </Flex>
       </Box>
     </Center>
   );

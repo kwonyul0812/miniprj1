@@ -45,4 +45,15 @@ public class BoardController {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
+
+    @PostMapping("edit")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity edit(@RequestBody Board board, Authentication authentication) {
+        if (service.hasAccess(board.getId(), authentication)) {
+            service.edit(board);
+
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
 }

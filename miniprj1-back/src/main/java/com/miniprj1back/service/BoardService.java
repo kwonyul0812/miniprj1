@@ -40,4 +40,8 @@ public class BoardService {
 
         return board.getMemberId().equals(Integer.valueOf(authentication.getName()));
     }
+
+    public void edit(Board board) {
+        mapper.updateBoard(board);
+    }
 }

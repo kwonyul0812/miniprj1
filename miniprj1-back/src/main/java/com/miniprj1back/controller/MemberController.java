@@ -3,10 +3,9 @@ package com.miniprj1back.controller;
 import com.miniprj1back.domain.Member;
 import com.miniprj1back.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -26,6 +25,27 @@ public class MemberController {
     public Map<String, Object> token(@RequestBody Member member) {
         Map<String, Object> result = service.getToken(member);
 
+        return result;
+    }
+
+    @GetMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
+    public Member getMember(@PathVariable Integer id) {
+        Member member = service.getMember(id);
+
+        return member;
+    }
+
+    @PostMapping("edit/password")
+    @PreAuthorize("isAuthenticated()")
+    public void editPassword(@RequestBody Member member, Authentication authentication) {
+        service.editPassword(member.getPassword(), authentication);
+    }
+
+    @PostMapping("edit/nickName")
+    @PreAuthorize("isAuthenticated()")
+    public Map<String, Object> editNickName(@RequestBody Member member, Authentication authentication) {
+        Map<String, Object> result = service.editNickName(member.getNickName(), authentication);
         return result;
     }
 

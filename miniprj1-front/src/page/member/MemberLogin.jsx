@@ -35,6 +35,7 @@ export function MemberLogin() {
         navigate("/");
       })
       .catch((err) => {
+        localStorage.removeItem("token");
         toast({
           position: "bottom-right",
           status: "error",
@@ -52,13 +53,16 @@ export function MemberLogin() {
         <Box mb={7}>
           <FormControl>
             <FormLabel>이메일</FormLabel>
-            <Input onChange={(e) => setEmail(e.target.value)} />
+            <Input type={"email"} onChange={(e) => setEmail(e.target.value)} />
           </FormControl>
         </Box>
         <Box mb={7}>
           <FormControl>
             <FormLabel>비밀번호</FormLabel>
-            <Input onChange={(e) => setPassword(e.target.value)} />
+            <Input
+              type={"password"}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </FormControl>
         </Box>
         <Box ml={"320px"}>

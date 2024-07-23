@@ -8,19 +8,31 @@ import {
   FormLabel,
   Heading,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spacer,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import TextareaAutosize from "react-textarea-autosize";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardView() {
   const { id } = useParams();
   const [board, setBoard] = useState({});
 
+  const { onOpen, onClose, isOpen } = useDisclosure();
   const toast = useToast();
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
@@ -61,7 +73,10 @@ export function BoardView() {
           </FormControl>
         </Box>
         <Flex mb={7}>
-          <Box ml={3}>{board.nickName}</Box>
+          <Flex alignItems={"center"} ml={3}>
+            <FontAwesomeIcon icon={faUser} />
+            <Box ml={1}>{board.nickName}</Box>
+          </Flex>
           <Spacer />
           <Box>{board.inserted}</Box>
         </Flex>
@@ -82,15 +97,36 @@ export function BoardView() {
             readOnly
           />
         </Box>
-        <Box mb={7} ml={"465px"}>
-          <Button mr={1} colorScheme={"blue"}>
-            수정
-          </Button>
-          <Button colorScheme={"red"} onClick={removeClick}>
-            삭제
-          </Button>
-        </Box>
+        {account.hasAccess(board.memberId) && (
+          <Flex mb={7} ml={"465px"}>
+            <Button
+              mr={1}
+              colorScheme={"blue"}
+              onClick={() => navigate(`/board/edit/${board.id}`)}
+            >
+              수정
+            </Button>
+            <Button colorScheme={"red"} onClick={onOpen}>
+              삭제
+            </Button>
+          </Flex>
+        )}
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>삭제 확인</ModalHeader>
+          <ModalBody>삭제 하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button mr={1} onClick={onClose}>
+              취소
+            </Button>
+            <Button colorScheme={"red"} onClick={removeClick}>
+              삭제
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Center>
   );
 }
