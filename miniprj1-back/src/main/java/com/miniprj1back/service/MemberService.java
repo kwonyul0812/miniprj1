@@ -91,4 +91,8 @@ public class MemberService {
         return Map.of("token", token);
 
     }
+
+    public Member checkNickName(String nickName) {
+        return mapper.selectNickName(nickName);
+    }
 }

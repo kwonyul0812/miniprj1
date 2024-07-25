@@ -16,13 +16,28 @@ public interface BoardMapper {
 
 
     @Select("""
+            <script>
             SELECT b.id,
                    b.title,
                    m.nick_name nickName,
                    b.inserted
             FROM board b JOIN member m ON b.member_id = m.id
+                <trim prefix="WHERE" prefixOverrides="OR">
+                    <if test="type != null">
+                        <bind name="pattern" value="'%' + keyword + '%'" />
+                        <if test="type == 'all' || type == 'title'">
+                            OR b.title LIKE #{pattern}
+                        </if>
+                        <if test="type == 'all' || type = 'nickName'">
+                            OR m.nick_name LIKE #{pattern}
+                        </if>
+                    </if>
+                </trim>
+            ORDER BY id DESC
+            LIMIT #{offset}, 10
+            </script>
             """)
-    List<Board> selectBoardList();
+    List<Board> selectBoardList(Integer offset, String type, String keyword);
 
 
     @Select("""
@@ -52,4 +67,24 @@ public interface BoardMapper {
             WHERE id = #{id}
             """)
     int updateBoard(Board board);
+
+
+    @Select("""
+            <script>
+            SELECT COUNT(*)
+            FROM board b JOIN member m ON b.member_id = m.id
+                <trim prefix="WHERE" prefixOverrides="OR">
+                    <if test="type != null">
+                        <bind name="pattern" value="'%' + keyword + '%'" />
+                        <if test="type == 'all' || type == 'title'">
+                            OR b.title LIKE #{pattern}
+                        </if>
+                        <if test="type == 'all' || type == 'nickName'">
+                            OR m.nick_Name LIKE #{pattern}
+                        </if>
+                    </if>
+                </trim>
+            </script>
+            """)
+    Integer countAll(String type, String keyword);
 }

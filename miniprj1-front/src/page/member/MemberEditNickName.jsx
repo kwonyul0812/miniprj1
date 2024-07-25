@@ -18,6 +18,7 @@ import axios from "axios";
 
 export function MemberEditNickName() {
   const [nickName, setNickName] = useState("");
+  const [isNickNameChecked, setIsNickNameChecked] = useState(false);
 
   const account = useContext(LoginContext);
   const navigate = useNavigate();
@@ -25,6 +26,10 @@ export function MemberEditNickName() {
 
   let isDisabled = false;
   if (nickName.trim().length === 0) {
+    isDisabled = true;
+  }
+
+  if (!isNickNameChecked) {
     isDisabled = true;
   }
 
@@ -44,6 +49,27 @@ export function MemberEditNickName() {
       });
   }
 
+  function checkNickName() {
+    axios
+      .get(`/api/member/check?nickName=${nickName}`)
+      .then((res) => {
+        toast({
+          position: "bottom-right",
+          status: "warning",
+          description: "사용 불가능한 닉네임 입니다",
+        });
+        setIsNickNameChecked(false);
+      })
+      .catch((err) => {
+        toast({
+          position: "bottom-right",
+          status: "info",
+          description: "사용 가능한 닉네임 입니다",
+        });
+        setIsNickNameChecked(true);
+      });
+  }
+
   return (
     <Center>
       <Box w={600}>
@@ -54,9 +80,14 @@ export function MemberEditNickName() {
           <FormControl>
             <FormLabel>닉네임</FormLabel>
             <InputGroup size={"md"}>
-              <Input onChange={(e) => setNickName(e.target.value)} />
+              <Input
+                onChange={(e) => {
+                  setNickName(e.target.value);
+                  setIsNickNameChecked(false);
+                }}
+              />
               <InputRightElement width={"5.5rem"}>
-                <Button>중복확인</Button>
+                <Button onClick={checkNickName}>중복확인</Button>
               </InputRightElement>
             </InputGroup>
           </FormControl>

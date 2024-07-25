@@ -3,6 +3,7 @@ package com.miniprj1back.controller;
 import com.miniprj1back.domain.Member;
 import com.miniprj1back.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,16 @@ public class MemberController {
     public Map<String, Object> editNickName(@RequestBody Member member, Authentication authentication) {
         Map<String, Object> result = service.editNickName(member.getNickName(), authentication);
         return result;
+    }
+
+    @GetMapping("check")
+    public ResponseEntity check(@RequestParam String nickName) {
+        Member member = service.checkNickName(nickName);
+
+        if(member == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -54,4 +54,12 @@ public interface MemberMapper {
             WHERE id = #{memberId}
             """)
     int updateNickName(String nickName, Integer memberId);
+
+
+    @Select("""
+            SELECT *
+            FROM member
+            WHERE nick_name = #{nickName}
+            """)
+    Member selectNickName(String nickName);
 }

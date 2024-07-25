@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,9 +25,10 @@ public class BoardController {
     }
 
     @GetMapping("list")
-    public List<Board> list() {
-        List<Board> list = service.getList();
-        return list;
+    public Map<String, Object> list(@RequestParam(defaultValue = "1") Integer page,
+                                    @RequestParam(required = false) String type,
+                                    @RequestParam(defaultValue = "") String keyword) {
+        return service.getList(page, type, keyword);
     }
 
     @GetMapping("{id}")

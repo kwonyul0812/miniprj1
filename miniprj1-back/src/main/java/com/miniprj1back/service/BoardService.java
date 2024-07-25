@@ -7,7 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +23,28 @@ public class BoardService {
 
     }
 
-    public List<Board> getList() {
-        List<Board> list = mapper.selectBoardList();
-        return list;
+    public Map<String, Object> getList(Integer page, String type, String keyword) {
+        Map<String, Object> pageInfo = new HashMap<>();
+
+        Integer numberOfBoard = mapper.countAll(type, keyword);
+
+        Integer lastPageNumber = (numberOfBoard - 1) / 10 + 1;
+        Integer offset = (page - 1) * 10;
+        Integer beginPageNumber = (page - 1) / 10 * 10 + 1;
+        Integer endPageNumber = beginPageNumber + 9;
+        endPageNumber = Math.min(endPageNumber, lastPageNumber);
+        Integer prevPageNumber = beginPageNumber - 10;
+        Integer nextPageNumber = beginPageNumber + 10;
+
+        pageInfo.put("lastPageNumber", lastPageNumber);
+        pageInfo.put("beginPageNumber", beginPageNumber);
+        pageInfo.put("endPageNumber", endPageNumber);
+        pageInfo.put("prevPageNumber", prevPageNumber);
+        pageInfo.put("nextPageNumber", nextPageNumber);
+        pageInfo.put("currentPageNumber", page);
+
+        return Map.of("pageInfo", pageInfo, "boardList", mapper.selectBoardList(offset, type, keyword));
+
     }
 
     public Board get(Integer id) {
