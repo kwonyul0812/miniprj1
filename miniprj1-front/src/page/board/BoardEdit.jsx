@@ -24,6 +24,7 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 export function BoardEdit() {
   const { id } = useParams();
   const [board, setBoard] = useState({});
+  const [files, setFiles] = useState(null);
 
   const { onOpen, onClose, isOpen } = useDisclosure();
   const navigate = useNavigate();
@@ -35,10 +36,11 @@ export function BoardEdit() {
 
   function handleModifyClick() {
     axios
-      .post("/api/board/edit", {
+      .postForm("/api/board/edit", {
         id: board.id,
         title: board.title,
         content: board.content,
+        files,
       })
       .then((res) => navigate(`/board/view/${id}`));
   }
@@ -55,6 +57,17 @@ export function BoardEdit() {
             <Input
               value={board.title}
               onChange={(e) => setBoard({ ...board, title: e.target.value })}
+            />
+          </FormControl>
+        </Box>
+        <Box mb={7}>
+          <FormControl>
+            <FormLabel>이미지</FormLabel>
+            <Input
+              type={"file"}
+              multiple
+              accept="image/*"
+              onChange={(e) => setFiles(e.target.files)}
             />
           </FormControl>
         </Box>

@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +22,10 @@ public class BoardController {
 
     @PostMapping("write")
     @PreAuthorize("isAuthenticated()")
-    public void write(@RequestBody Board board, Authentication authentication) {
-        service.add(board, authentication);
+    public void write(Board board,
+                      Authentication authentication,
+                      @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
+        service.add(board, authentication, files);
     }
 
     @GetMapping("list")
@@ -42,7 +46,7 @@ public class BoardController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
         if (service.hasAccess(id, authentication)) {
-            service.delete(id, authentication);
+            service.delete(id);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -50,9 +54,11 @@ public class BoardController {
 
     @PostMapping("edit")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity edit(@RequestBody Board board, Authentication authentication) {
+    public ResponseEntity edit(Board board,
+                               Authentication authentication,
+                               @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
         if (service.hasAccess(board.getId(), authentication)) {
-            service.edit(board);
+            service.edit(board, files);
 
             return ResponseEntity.ok().build();
         }

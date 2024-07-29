@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   Center,
@@ -25,6 +26,7 @@ import {
   faAnglesLeft,
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -107,7 +109,14 @@ export function BoardList() {
                   textAlign={"center"}
                 >
                   <Td textAlign={"center"}>{board.id}</Td>
-                  <Td>{board.title}</Td>
+                  <Td>
+                    {board.title}
+                    {board.numberOfImages > 0 && (
+                      <Badge ml={2}>
+                        <FontAwesomeIcon icon={faImage} />
+                      </Badge>
+                    )}
+                  </Td>
                   <Td>{board.nickName}</Td>
                   <Td textAlign={"center"}>{getTimeAgo(board.inserted)}</Td>
                 </Tr>

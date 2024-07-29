@@ -34,4 +34,24 @@ SELECT *
 FROM board;
 
 INSERT INTO board(title, content, member_id)
-SELECT title, content, member_id FROM board;
+SELECT title, content, member_id
+FROM board;
+
+CREATE TABLE board_file
+(
+    id       INT PRIMARY KEY AUTO_INCREMENT,
+    board_id INT          NOT NULL REFERENCES board (id),
+    name     VARCHAR(500) NOT NULL
+);
+
+SELECT *
+FROM board_file;
+
+CREATE TABLE comment
+(
+    id        INT PRIMARY KEY AUTO_INCREMENT,
+    comment   VARCHAR(500) NOT NULL,
+    board_id  INT          NOT NULL REFERENCES board (id),
+    member_id INT          NOT NULL REFERENCES member (id),
+    inserted  DATETIME     NOT NULL DEFAULT NOW()
+);

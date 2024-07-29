@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -24,6 +25,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { CommentComponent } from "../../component/comment/CommentComponent.jsx";
 
 export function BoardView() {
   const { id } = useParams();
@@ -80,6 +82,12 @@ export function BoardView() {
           <Spacer />
           <Box>{board.inserted}</Box>
         </Flex>
+        <Flex mb={7} flexWrap="wrap" justifyContent={"center"}>
+          {board.fileList &&
+            board.fileList.map((file) => (
+              <Image key={file.name} repeat w={"30%"} m={"1%"} src={file.src} />
+            ))}
+        </Flex>
         <Box mb={7}>
           <TextareaAutosize
             minRows={3}
@@ -111,6 +119,7 @@ export function BoardView() {
             </Button>
           </Flex>
         )}
+        <CommentComponent boardId={board.id} />
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
