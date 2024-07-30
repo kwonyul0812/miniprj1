@@ -9,22 +9,35 @@ import {
   ModalHeader,
   Textarea,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { LoginContext } from "../LoginProvider.jsx";
 import axios from "axios";
 
-export function CommentWrite({ boardId }) {
+export function CommentWrite({ boardId, isProcessing, setIsProcessing }) {
   const [comment, setComment] = useState("");
 
   const account = useContext(LoginContext);
   const { onOpen, isOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   function submitClick() {
-    axios.post("/api/comment/write", {
-      comment,
-      boardId,
-    });
+    setIsProcessing(true);
+    axios
+      .post("/api/comment/write", {
+        comment,
+        boardId,
+      })
+      .then((res) => {
+        setComment("");
+        toast({
+          position: "bottom-right",
+          status: "success",
+          description: "댓글 등록 완료되었습니다",
+        });
+      })
+      .finally(() => setIsProcessing(false));
   }
 
   return (
@@ -34,6 +47,7 @@ export function CommentWrite({ boardId }) {
           placeholder={
             account.isLoggedIn() ? "댓글을 작성해보세요" : "로그인을 해주세요"
           }
+          value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
       </Box>

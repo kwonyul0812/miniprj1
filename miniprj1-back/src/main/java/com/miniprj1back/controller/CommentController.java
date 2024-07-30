@@ -3,12 +3,12 @@ package com.miniprj1back.controller;
 import com.miniprj1back.domain.Comment;
 import com.miniprj1back.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -20,10 +20,16 @@ public class CommentController {
 
     @PostMapping("write")
     @PreAuthorize("isAuthenticated()")
-    public void writeComment(@RequestBody Comment comment, Authentication authentication) {
-        System.out.println("comment = " + comment);
-//        if(service.validate(comment)) {
-//            System.out.println("comment = " + comment);
-//        }
+    public ResponseEntity writeComment(@RequestBody Comment comment, Authentication authentication) {
+        if(service.validate(comment)) {
+            service.write(comment, authentication);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("{boardId}")
+    public List<Comment> getComment(@PathVariable Integer boardId) {
+        return service.get(boardId);
     }
 }

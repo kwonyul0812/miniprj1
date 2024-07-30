@@ -55,3 +55,5 @@ CREATE TABLE comment
     member_id INT          NOT NULL REFERENCES member (id),
     inserted  DATETIME     NOT NULL DEFAULT NOW()
 );
+
+SELECT * FROM comment;

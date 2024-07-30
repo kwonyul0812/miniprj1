@@ -119,7 +119,7 @@ export function BoardView() {
             </Button>
           </Flex>
         )}
-        <CommentComponent boardId={board.id} />
+        <CommentComponent boardId={id} />
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
