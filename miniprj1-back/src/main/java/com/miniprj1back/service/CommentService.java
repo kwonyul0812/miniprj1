@@ -36,4 +36,25 @@ public class CommentService {
     public List<Comment> get(Integer boardId) {
         return mapper.selectCommentList(boardId);
     }
+
+    public boolean hasAccess(Comment comment, Authentication authentication) {
+        Comment db = mapper.selectCommentByCommentId(comment.getId());
+
+        if(db == null) {
+            return false;
+        }
+
+        if(!db.getMemberId().equals(Integer.valueOf(authentication.getName()))) {
+            return false;
+        }
+        return true;
+    }
+
+    public void delete(Integer commentId) {
+        mapper.deleteComment(commentId);
+    }
+
+    public void update(Comment comment) {
+        mapper.update(comment);
+    }
 }

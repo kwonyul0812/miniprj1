@@ -1,9 +1,7 @@
 package com.miniprj1back.mapper;
 
 import com.miniprj1back.domain.Comment;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -28,4 +26,25 @@ public interface CommentMapper {
             ORDER BY c.id DESC
             """)
     List<Comment> selectCommentList(Integer boardId);
+
+    @Select("""
+            SELECT * FROM comment
+            WHERE id = #{commentId}
+            """)
+    Comment selectCommentByCommentId(Integer commentId);
+
+
+    @Delete("""
+            DELETE FROM comment
+            WHERE id = #{commentId}
+            """)
+    int deleteComment(Integer commentId);
+
+
+    @Update("""
+            UPDATE comment
+            SET comment = #{comment}
+            WHERE id = #{id}
+            """)
+    int update(Comment comment);
 }
