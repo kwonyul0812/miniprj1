@@ -72,7 +72,9 @@ public class BoardService {
 
     }
 
-    public Board get(Integer id) {
+    public Map<String, Object> get(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+
         Board board = mapper.selectBoard(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
 
@@ -82,7 +84,18 @@ public class BoardService {
 
         board.setFileList(files);
 
-        return board;
+        Map<String, Object> like = new HashMap<>();
+        if (authentication == null) {
+            like.put("like", false);
+        } else {
+            int check = mapper.selectLike(id, Integer.valueOf(authentication.getName()));
+            like.put("like", check == 1);
+        }
+        like.put("count", mapper.selectCountLike(id));
+        result.put("board", board);
+        result.put("like", like);
+
+        return result;
     }
 
     public void delete(Integer id) {
@@ -114,7 +127,7 @@ public class BoardService {
             // 기존에 있던 이미지 지우기
             List<String> fileNames = mapper.selectFileNameByBoardId(board.getId());
 
-            for(String fileName : fileNames) {
+            for (String fileName : fileNames) {
                 String path = STR."C:/Temp/miniprj1/\{board.getId()}/\{fileName}";
                 File file = new File(path);
                 file.delete();
@@ -141,5 +154,23 @@ public class BoardService {
         }
 
         mapper.updateBoard(board);
+    }
+
+    public Map<String, Object> like(Board board, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("like", false);
+        Integer boardId = board.getId();
+        Integer memberId = Integer.valueOf(authentication.getName());
+
+        int check = mapper.deleteLike(boardId, memberId);
+
+        if (check == 0) {
+            mapper.insertLike(boardId, memberId);
+            result.put("like", true);
+        }
+
+        result.put("count", mapper.selectCountLike(boardId));
+
+        return result;
     }
 }

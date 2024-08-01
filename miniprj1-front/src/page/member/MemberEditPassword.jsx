@@ -33,7 +33,7 @@ export function MemberEditPassword() {
 
   function editPassword() {
     axios
-      .post("/api/member/edit/password", {
+      .put("/api/member/edit/password", {
         password: password,
       })
       .then((res) => {

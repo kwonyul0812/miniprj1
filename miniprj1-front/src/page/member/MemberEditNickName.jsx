@@ -35,7 +35,7 @@ export function MemberEditNickName() {
 
   function editNickName() {
     axios
-      .post("/api/member/edit/nickName", {
+      .put("/api/member/edit/nickName", {
         nickName: nickName,
       })
       .then((res) => {

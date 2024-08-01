@@ -36,10 +36,8 @@ public class BoardController {
     }
 
     @GetMapping("{id}")
-    public Board get(@PathVariable Integer id) {
-        Board board = service.get(id);
-
-        return board;
+    public Map<String, Object> get(@PathVariable Integer id, Authentication authentication) {
+        return service.get(id, authentication);
     }
 
     @DeleteMapping("{id}")
@@ -52,7 +50,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @PostMapping("edit")
+    @PutMapping("edit")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity edit(Board board,
                                Authentication authentication,
@@ -63,5 +61,11 @@ public class BoardController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @PutMapping("like")
+    @PreAuthorize("isAuthenticated()")
+    public Map<String, Object> like(@RequestBody Board board, Authentication authentication) {
+        return service.like(board, authentication);
     }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faUser } from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
+import { LoginContext } from "../LoginProvider.jsx";
 
 export function CommentList({ boardId, isProcessing, setIsProcessing }) {
   const [commentList, setCommentList] = useState([]);
@@ -28,6 +29,7 @@ export function CommentList({ boardId, isProcessing, setIsProcessing }) {
   const [commentText, setCommentText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
+  const account = useContext(LoginContext);
   const toast = useToast();
   const {
     isOpen: isOpen1,
@@ -89,7 +91,7 @@ export function CommentList({ boardId, isProcessing, setIsProcessing }) {
   function modifyComment() {
     setIsProcessing(true);
     axios
-      .post("/api/comment/modify", {
+      .put("/api/comment/modify", {
         id: commentId,
         comment: commentText,
       })
@@ -119,24 +121,26 @@ export function CommentList({ boardId, isProcessing, setIsProcessing }) {
           {checkProcess(comment.id) || (
             <Flex p={2} justifyContent={"space-between"} alignItems={"center"}>
               <Text>{comment.comment}</Text>
-              <Flex gap={1}>
-                <Button
-                  colorScheme={"blue"}
-                  onClick={() => {
-                    setIsEditing(true);
-                    setCommentId(comment.id);
-                    setCommentText(comment.comment);
-                  }}
-                >
-                  수정
-                </Button>
-                <Button
-                  colorScheme={"red"}
-                  onClick={() => removeClick(comment.id)}
-                >
-                  삭제
-                </Button>
-              </Flex>
+              {account.hasAccess(comment.memberId) && (
+                <Flex gap={1}>
+                  <Button
+                    colorScheme={"blue"}
+                    onClick={() => {
+                      setIsEditing(true);
+                      setCommentId(comment.id);
+                      setCommentText(comment.comment);
+                    }}
+                  >
+                    수정
+                  </Button>
+                  <Button
+                    colorScheme={"red"}
+                    onClick={() => removeClick(comment.id)}
+                  >
+                    삭제
+                  </Button>
+                </Flex>
+              )}
             </Flex>
           )}
           {checkProcess(comment.id) && (

@@ -44,6 +44,7 @@ export function CommentWrite({ boardId, isProcessing, setIsProcessing }) {
     <Flex gap={1}>
       <Box flex={1}>
         <Textarea
+          resize={"none"}
           placeholder={
             account.isLoggedIn() ? "댓글을 작성해보세요" : "로그인을 해주세요"
           }

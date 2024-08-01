@@ -37,13 +37,13 @@ public class MemberController {
         return member;
     }
 
-    @PostMapping("edit/password")
+    @PutMapping("edit/password")
     @PreAuthorize("isAuthenticated()")
     public void editPassword(@RequestBody Member member, Authentication authentication) {
         service.editPassword(member.getPassword(), authentication);
     }
 
-    @PostMapping("edit/nickName")
+    @PutMapping("edit/nickName")
     @PreAuthorize("isAuthenticated()")
     public Map<String, Object> editNickName(@RequestBody Member member, Authentication authentication) {
         Map<String, Object> result = service.editNickName(member.getNickName(), authentication);

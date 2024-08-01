@@ -44,7 +44,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @PostMapping("modify")
+    @PutMapping("modify")
     public ResponseEntity modifyComment(@RequestBody Comment comment, Authentication authentication) {
         if (service.hasAccess(comment, authentication)) {
             service.update(comment);

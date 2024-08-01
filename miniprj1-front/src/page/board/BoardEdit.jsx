@@ -36,7 +36,7 @@ export function BoardEdit() {
 
   function handleModifyClick() {
     axios
-      .postForm("/api/board/edit", {
+      .putForm("/api/board/edit", {
         id: board.id,
         title: board.title,
         content: board.content,

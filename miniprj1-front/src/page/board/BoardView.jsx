@@ -16,6 +16,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
+  Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -26,18 +28,32 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { CommentComponent } from "../../component/comment/CommentComponent.jsx";
+import { faStar as faStarSolid } from "@fortawesome/free-solid-svg-icons/faStar";
 
 export function BoardView() {
   const { id } = useParams();
   const [board, setBoard] = useState({});
+  const [like, setLike] = useState({});
 
-  const { onOpen, onClose, isOpen } = useDisclosure();
+  const {
+    onOpen: onOpen1,
+    onClose: onClose1,
+    isOpen: isOpen1,
+  } = useDisclosure();
+  const {
+    onOpen: onOpen2,
+    onClose: onClose2,
+    isOpen: isOpen2,
+  } = useDisclosure();
   const toast = useToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
 
   useEffect(() => {
-    axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
+    axios.get(`/api/board/${id}`).then((res) => {
+      setBoard(res.data.board);
+      setLike(res.data.like);
+    });
   }, []);
 
   function removeClick() {
@@ -61,6 +77,16 @@ export function BoardView() {
         }
       });
   }
+
+  function likeClick() {
+    axios
+      .put(`/api/board/like`, {
+        id: id,
+      })
+      .then((res) => setLike(res.data));
+  }
+
+  console.log(account.isLoggedIn);
 
   return (
     <Center>
@@ -105,6 +131,45 @@ export function BoardView() {
             readOnly
           />
         </Box>
+        <Box mb={7}>
+          <Center>
+            <Stack>
+              {like.like && (
+                <Button
+                  borderRadius={"100%"}
+                  w={"50px"}
+                  h={"50px"}
+                  bgColor={"#3B4890"}
+                  onClick={account.isLoggedIn() ? likeClick : onOpen2}
+                >
+                  <FontAwesomeIcon
+                    fontSize={"25px"}
+                    color={"#FFCC00"}
+                    icon={faStarSolid}
+                  />
+                </Button>
+              )}
+              {like.like || (
+                <Button
+                  borderRadius={"100%"}
+                  w={"50px"}
+                  h={"50px"}
+                  bgColor={"#AAAAAA"}
+                  onClick={account.isLoggedIn() ? likeClick : onOpen2}
+                >
+                  <FontAwesomeIcon
+                    icon={faStarSolid}
+                    fontSize={"25px"}
+                    color={"#FFFFFF"}
+                  />
+                </Button>
+              )}
+              <Text mt={-2} textAlign={"center"}>
+                추천 {like.count}
+              </Text>
+            </Stack>
+          </Center>
+        </Box>
         {account.hasAccess(board.memberId) && (
           <Flex mb={7} ml={"465px"}>
             <Button
@@ -114,24 +179,37 @@ export function BoardView() {
             >
               수정
             </Button>
-            <Button colorScheme={"red"} onClick={onOpen}>
+            <Button colorScheme={"red"} onClick={onOpen1}>
               삭제
             </Button>
           </Flex>
         )}
         <CommentComponent boardId={id} />
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen1} onClose={onClose1}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>삭제 확인</ModalHeader>
           <ModalBody>삭제 하시겠습니까?</ModalBody>
           <ModalFooter>
-            <Button mr={1} onClick={onClose}>
+            <Button mr={1} onClick={onClose1}>
               취소
             </Button>
             <Button colorScheme={"red"} onClick={removeClick}>
               삭제
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen2} onClose={onClose2} isCentered>
+        <ModalContent w={"400px"}>
+          <ModalHeader>알림</ModalHeader>
+          <ModalBody textAlign={"center"}>
+            추천은 로그인시 이용 가능합니다
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme={"blue"} onClick={onClose2}>
+              확인
             </Button>
           </ModalFooter>
         </ModalContent>

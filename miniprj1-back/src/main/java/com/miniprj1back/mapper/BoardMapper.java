@@ -112,4 +112,31 @@ public interface BoardMapper {
             WHERE board_id = #{boardId}
             """)
     int deleteImageByBoardId(Integer id);
+
+
+    @Insert("""
+            INSERT INTO board_like (board_id, member_id)
+            VALUES (#{boardId}, #{memberId})
+            """)
+    int insertLike(Integer boardId, Integer memberId);
+
+    @Delete("""
+            DELETE FROM board_like
+            WHERE board_id = #{boardId} AND member_id = #{memberId}
+            """)
+    int deleteLike(Integer boardId, Integer memberId);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM board_like
+            WHERE board_id = #{boardId}
+            """)
+    int selectCountLike(Integer boardId);
+
+
+    @Select("""
+            SELECT COUNT(*) FROM board_like
+            WHERE board_id = #{boardId} AND member_id = #{memberId}
+            """)
+    int selectLike(Integer boardId, Integer memberId);
 }
