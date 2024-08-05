@@ -72,7 +72,7 @@ public class BoardService {
 
     }
 
-    public Map<String, Object> get(Integer id, Authentication authentication) {
+    public Map<String, Object>  get(Integer id, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
 
         Board board = mapper.selectBoard(id);
@@ -98,7 +98,7 @@ public class BoardService {
         return result;
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id, Authentication authentication) {
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
 
         for (String fileName : fileNames) {
@@ -112,6 +112,8 @@ public class BoardService {
             dir.delete();
         }
 
+        mapper.deleteLike(id, Integer.valueOf(authentication.getName()));
+        mapper.deleteCommentByBoardId(id);
         mapper.deleteImageByBoardId(id);
         mapper.deleteByBoardId(id);
     }

@@ -44,7 +44,7 @@ public class BoardController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
         if (service.hasAccess(id, authentication)) {
-            service.delete(id);
+            service.delete(id, authentication);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

@@ -18,7 +18,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
+  faCalendarDays,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import { LoginContext } from "../LoginProvider.jsx";
@@ -28,6 +35,13 @@ export function CommentList({ boardId, isProcessing, setIsProcessing }) {
   const [commentId, setCommentId] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageInfo, setPageInfo] = useState({});
+
+  const pageNumber = [];
+  for (let i = pageInfo.beginPageNumber; i <= pageInfo.endPageNumber; i++) {
+    pageNumber.push(i);
+  }
 
   const account = useContext(LoginContext);
   const toast = useToast();
@@ -45,10 +59,17 @@ export function CommentList({ boardId, isProcessing, setIsProcessing }) {
   useEffect(() => {
     if (!isProcessing) {
       axios
-        .get(`/api/comment/${boardId}`)
-        .then((res) => setCommentList(res.data));
+        .get(`/api/comment/${boardId}`, {
+          params: {
+            page: page,
+          },
+        })
+        .then((res) => {
+          setCommentList(res.data.commentList);
+          setPageInfo(res.data.pageInfo);
+        });
     }
-  }, [isProcessing]);
+  }, [isProcessing, page]);
 
   const getTimeAgo = (date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko });
@@ -163,6 +184,39 @@ export function CommentList({ boardId, isProcessing, setIsProcessing }) {
           )}
         </Box>
       ))}
+      <Flex justifyContent={"center"} gap={1}>
+        {pageInfo.currentPageNumber > 1 && (
+          <Button w={"40px"} onClick={() => setPage(1)}>
+            <FontAwesomeIcon icon={faAnglesLeft} />
+          </Button>
+        )}
+        {pageInfo.prevPageNumber > 0 && (
+          <Button w={"40px"} onClick={() => setPage(pageInfo.prevPageNumber)}>
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </Button>
+        )}
+        {pageNumber.map((number) => (
+          <Button
+            key={number}
+            onClick={() => setPage(number)}
+            colorScheme={
+              pageInfo.currentPageNumber === number ? "blue" : "gray"
+            }
+          >
+            {number}
+          </Button>
+        ))}
+        {pageInfo.nextPageNumber <= pageInfo.lastPageNumber && (
+          <Button w={"40px"} onClick={() => setPage(pageInfo.nextPageNumber)}>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </Button>
+        )}
+        {pageInfo.currentPageNumber < pageInfo.lastPageNumber && (
+          <Button w={"40px"} onClick={() => setPage(pageInfo.lastPageNumber)}>
+            <FontAwesomeIcon icon={faAnglesRight} />
+          </Button>
+        )}
+      </Flex>
       <Modal isOpen={isOpen1} onClose={onClose1}>
         <ModalOverlay />
         <ModalContent>

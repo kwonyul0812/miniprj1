@@ -22,9 +22,13 @@ public interface BoardMapper {
                    b.title,
                    m.nick_name nickName,
                    b.inserted,
-                   COUNT(DISTINCT f.name) numberOfImages
+                   COUNT(DISTINCT f.name) numberOfImages,
+                   COUNT(DISTINCT c.id) numberOfComments,
+                   COUNT(DISTINCT l.member_id) numberOfLikes
             FROM board b JOIN member m ON b.member_id = m.id
                          LEFT JOIN board_file f ON b.id = f.board_id
+                         LEFT JOIN comment c ON b.id = c.board_id
+                         LEFT JOIN board_like l ON b.id = l.board_id
                 <trim prefix="WHERE" prefixOverrides="OR">
                     <if test="type != null">
                         <bind name="pattern" value="'%' + keyword + '%'" />
@@ -139,4 +143,10 @@ public interface BoardMapper {
             WHERE board_id = #{boardId} AND member_id = #{memberId}
             """)
     int selectLike(Integer boardId, Integer memberId);
+
+    @Delete("""
+            DELETE FROM comment
+            WHERE board_id = #{boardId}
+            """)
+    int deleteCommentByBoardId(Integer boardId);
 }

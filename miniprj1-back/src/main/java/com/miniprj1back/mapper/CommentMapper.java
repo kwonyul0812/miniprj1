@@ -24,8 +24,9 @@ public interface CommentMapper {
             FROM comment c JOIN member m ON c.member_id = m.id
             WHERE board_id = #{boardId}
             ORDER BY c.id DESC
+            LIMIT #{offset}, 10
             """)
-    List<Comment> selectCommentList(Integer boardId);
+    List<Comment> selectCommentList(Integer boardId, Integer offset);
 
     @Select("""
             SELECT * FROM comment
@@ -47,4 +48,11 @@ public interface CommentMapper {
             WHERE id = #{id}
             """)
     int update(Comment comment);
+
+
+    @Select("""
+            SELECT COUNT(*) FROM comment
+            WHERE board_id = #{boardId}
+            """)
+    Integer selectCountAll(Integer boardId);
 }

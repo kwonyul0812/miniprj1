@@ -7,7 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +35,41 @@ public class CommentService {
         mapper.insertComment(comment);
     }
 
-    public List<Comment> get(Integer boardId) {
-        return mapper.selectCommentList(boardId);
+    public Map<String, Object> get(Integer boardId, Integer page) {
+        Map<String, Object> result = new HashMap<>();
+
+        Integer numberOfComments = mapper.selectCountAll(boardId);
+        Integer lastPageNumber = (numberOfComments - 1) / 10 + 1;
+        Integer offset = (page - 1) * 10;
+        Integer beginPageNumber = (page - 1) / 10 * 10 + 1;
+        Integer endPageNumber = beginPageNumber + 9;
+        endPageNumber = Math.min(endPageNumber, lastPageNumber);
+
+        Integer prevPageNumber = beginPageNumber - 10;
+        Integer nextPageNumber = beginPageNumber + 10;
+
+        Map<String, Object> pageInfo = new HashMap<>();
+        pageInfo.put("lastPageNumber", lastPageNumber);
+        pageInfo.put("beginPageNumber", beginPageNumber);
+        pageInfo.put("endPageNumber", endPageNumber);
+        pageInfo.put("prevPageNumber", prevPageNumber);
+        pageInfo.put("nextPageNumber", nextPageNumber);
+        pageInfo.put("currentPageNumber", page);
+
+        result.put("pageInfo", pageInfo);
+        result.put("commentList", mapper.selectCommentList(boardId, offset));
+
+        return result;
     }
 
     public boolean hasAccess(Comment comment, Authentication authentication) {
         Comment db = mapper.selectCommentByCommentId(comment.getId());
 
-        if(db == null) {
+        if (db == null) {
             return false;
         }
 
-        if(!db.getMemberId().equals(Integer.valueOf(authentication.getName()))) {
+        if (!db.getMemberId().equals(Integer.valueOf(authentication.getName()))) {
             return false;
         }
         return true;

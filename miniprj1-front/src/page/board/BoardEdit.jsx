@@ -31,7 +31,7 @@ export function BoardEdit() {
   const account = useContext(LoginContext);
 
   useEffect(() => {
-    axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
+    axios.get(`/api/board/${id}`).then((res) => setBoard(res.data.board));
   }, []);
 
   function handleModifyClick() {

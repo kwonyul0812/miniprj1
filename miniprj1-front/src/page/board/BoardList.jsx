@@ -10,6 +10,7 @@ import {
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -77,7 +78,7 @@ export function BoardList() {
 
   return (
     <Center>
-      <Box w={800}>
+      <Box w={1000}>
         <Box mb={10}>
           <Heading>게시판</Heading>
         </Box>
@@ -88,13 +89,16 @@ export function BoardList() {
                 <Th textAlign={"center"} w={"5%"}>
                   No.
                 </Th>
-                <Th textAlign={"center"} w={"50%"}>
+                <Th textAlign={"center"} w={"51%"}>
                   제목
                 </Th>
-                <Th textAlign={"center"} w={"25%"}>
-                  작성자
+                <Th textAlign={"center"} w={"9%"}>
+                  추천수
                 </Th>
                 <Th textAlign={"center"} w={"20%"}>
+                  작성자
+                </Th>
+                <Th textAlign={"center"} w={"15%"}>
                   작성시간
                 </Th>
               </Tr>
@@ -109,14 +113,18 @@ export function BoardList() {
                   textAlign={"center"}
                 >
                   <Td textAlign={"center"}>{board.id}</Td>
-                  <Td>
+                  <Td display={"flex"} gap={2}>
                     {board.title}
                     {board.numberOfImages > 0 && (
-                      <Badge ml={2}>
+                      <Badge w={"20px"} h={"20px"}>
                         <FontAwesomeIcon icon={faImage} />
                       </Badge>
                     )}
+                    {board.numberOfComments > 0 && (
+                      <Text>[{board.numberOfComments}]</Text>
+                    )}
                   </Td>
+                  <Td textAlign={"center"}>{board.numberOfLikes}</Td>
                   <Td>{board.nickName}</Td>
                   <Td textAlign={"center"}>{getTimeAgo(board.inserted)}</Td>
                 </Tr>

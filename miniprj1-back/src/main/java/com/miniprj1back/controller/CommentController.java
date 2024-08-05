@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -30,8 +31,8 @@ public class CommentController {
     }
 
     @GetMapping("{boardId}")
-    public List<Comment> getComment(@PathVariable Integer boardId) {
-        return service.get(boardId);
+    public Map<String, Object> getComment(@PathVariable Integer boardId, @RequestParam Integer page) {
+        return service.get(boardId, page);
     }
 
     @DeleteMapping("delete")
