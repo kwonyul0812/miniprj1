@@ -141,6 +141,7 @@ export function BoardView() {
                   h={"50px"}
                   bgColor={"#3B4890"}
                   onClick={account.isLoggedIn() ? likeClick : onOpen2}
+                  justifyContent={"center"}
                 >
                   <FontAwesomeIcon
                     fontSize={"25px"}
@@ -156,6 +157,7 @@ export function BoardView() {
                   h={"50px"}
                   bgColor={"#AAAAAA"}
                   onClick={account.isLoggedIn() ? likeClick : onOpen2}
+                  justifyContent={"center"}
                 >
                   <FontAwesomeIcon
                     icon={faStarSolid}
