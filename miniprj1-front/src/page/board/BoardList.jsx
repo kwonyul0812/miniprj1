@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   Button,
   Center,
@@ -34,6 +33,7 @@ export function BoardList() {
   const [pageInfo, setPageInfo] = useState({});
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ export function BoardList() {
                 <Th textAlign={"center"} w={"5%"}>
                   No.
                 </Th>
-                <Th textAlign={"center"} w={"51%"}>
+                <Th textAlign={"center"} w={"52%"}>
                   제목
                 </Th>
                 <Th textAlign={"center"} w={"9%"}>
@@ -98,7 +98,7 @@ export function BoardList() {
                 <Th textAlign={"center"} w={"20%"}>
                   작성자
                 </Th>
-                <Th textAlign={"center"} w={"15%"}>
+                <Th textAlign={"center"} w={"14%"}>
                   작성시간
                 </Th>
               </Tr>
@@ -111,14 +111,14 @@ export function BoardList() {
                   _hover={{ bgColor: "#dbdde0" }}
                   onClick={() => navigate(`/board/view/${board.id}`)}
                   textAlign={"center"}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
                 >
                   <Td textAlign={"center"}>{board.id}</Td>
-                  <Td display={"flex"} gap={2}>
+                  <Td display={"flex"} alignItems={"center"} gap={2}>
                     {board.title}
                     {board.numberOfImages > 0 && (
-                      <Badge w={"20px"} h={"20px"}>
-                        <FontAwesomeIcon icon={faImage} />
-                      </Badge>
+                      <FontAwesomeIcon fontSize={"14px"} icon={faImage} />
                     )}
                     {board.numberOfComments > 0 && (
                       <Text>[{board.numberOfComments}]</Text>
